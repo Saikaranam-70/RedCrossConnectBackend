@@ -5,6 +5,7 @@ const dotEnv = require('dotenv')
 const multer = require('multer')
 const path = require('path')
 const Donor = require('../models/Donor')
+const moment = require('moment')
 
 dotEnv.config();
 const secretKey = process.env.MY_NAME
@@ -21,7 +22,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 const addUser = async(req, res)=>{
-    const {email,name,mobilenumber, bloodgroup,country, state, city} = req.body;
+    const {email,name,mobilenumber, bloodgroup,country, state, city, dateOfLastDonation} = req.body;
     const profile = req.file ? req.file.filename : undefined;
 
     try {
@@ -30,6 +31,9 @@ const addUser = async(req, res)=>{
         if(user){
             return res.status(400).json({message:"email already exists"})
         }
+        const lastDonationDate = moment(dateOfLastDonation);
+        const oneYearAgo = moment().subtract(1, 'year');
+        const isEligible = lastDonationDate.isBefore(oneYearAgo);
         
         const usersSchema = new User({
             email, 
@@ -38,6 +42,8 @@ const addUser = async(req, res)=>{
             bloodgroup,
             country,
             state,
+            dateOfLastDonation,
+            isEligible,
             city,
             profile,
         })
@@ -49,6 +55,33 @@ const addUser = async(req, res)=>{
         res.status(500).json("Internal Server Error")
     }
 }
+
+const updateEligibility = async (req, res) => {
+    const { userId } = req.params.userId;
+    const { dateOfLastDonation } = req.body;
+
+    try {
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(400).json({ message: "User not found" });
+        }
+
+        // Determine eligibility based on the date of last donation
+        const lastDonationDate = moment(dateOfLastDonation);
+        const oneYearAgo = moment().subtract(1, 'year');
+        const isEligible = lastDonationDate.isBefore(oneYearAgo);
+
+        user.dateOfLastDonation = dateOfLastDonation;
+        user.isEligible = isEligible;
+
+        await user.save();
+
+        res.status(200).json({ success: "Eligibility updated successfully", user });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json("Internal Server Error");
+    }
+};
 
 const loginUser = async(req, res)=>{
     const {email, password} = req.body;
@@ -127,4 +160,13 @@ const deleteDonorById = async(req, res)=>{
     }
 }
 
-module.exports ={addUser : [upload.single('profile'), addUser], loginUser, getDonors, getUserById, deleteDonorById, getUserByEmail}
+module.exports ={addUser : [upload.single('profile'), addUser], loginUser, getDonors, getUserById, deleteDonorById, getUserByEmail, updateEligibility}
+
+
+//mongoose -> database
+//express -> routes handle
+//bcrypt -> password hashing
+
+
+//npm init -y
+//npm i mongoose, express, bcrypt, body-parser, cors, 

@@ -29,6 +29,13 @@ const userSchema = new mongoose.Schema({
         type:String,
         required:true
     },
+    dateOfLastDonation:{
+        type:Date
+    },
+    isEligible:{
+        type:Boolean,
+        required:true
+    },
     profile:{
         type:String
     }

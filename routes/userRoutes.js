@@ -1,5 +1,5 @@
 const express = require('express');
-const { addUser, loginUser, getDonors, getUserById, deleteDonorById, getUserByEmail } = require('../controllers/userController');
+const { addUser, loginUser, getDonors, getUserById, deleteDonorById, getUserByEmail, updateEligibility } = require('../controllers/userController');
 const verifyToken = require('../middlewears/verifyToken');
 const path = require('path')
 
@@ -7,6 +7,7 @@ const router = express.Router();
 
 router.post('/register', addUser)
 router.get('/getUserByEmail/:email', getUserByEmail)
+router.put('/updateEligibility/:userId', updateEligibility);
 router.post('/login', loginUser)
 router.post('/getDonors', getDonors)
 router.get('/getUser/:userId', getUserById)
