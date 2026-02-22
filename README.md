@@ -394,7 +394,7 @@ Contributions are what make the open source community amazing! 🙌
 <img src="https://avatars.githubusercontent.com/Saikaranam-70" width="120px" style="border-radius:50%;"/>
 
 ### **Sai Karanam**
-*Full Stack Developer | React · Node.js · MongoDB*
+*Full Stack Developer &nbsp;|&nbsp; React · Spring Boot · MongoDB · MySql · ASP.NET · Node.js · Express.js*
 
 [![GitHub](https://img.shields.io/badge/GitHub-Saikaranam--70-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Saikaranam-70)
 [![Frontend Repo](https://img.shields.io/badge/Frontend-Repo-61DAFB?style=for-the-badge&logo=react)](https://github.com/Saikaranam-70/RedCrossConnectFrontEnd)
